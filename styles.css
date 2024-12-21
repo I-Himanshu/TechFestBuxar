@@ -298,6 +298,8 @@ body {
 
 /* Timeline Section */
 .timeline {
+  max-width: 100vw;
+  overflow: hidden;
   background: var(--white);
   position: relative;
   padding: var(--spacing-lg) 0;
