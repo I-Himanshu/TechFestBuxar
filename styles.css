@@ -704,39 +704,9 @@ body {
 
 .map-container img {
   width: 100%;
-  height: 300px;
+  min-height: 300px;
+  
   object-fit: cover;
-}
-
-/* Footer Subscribe Form */
-.footer-subscribe {
-  display: flex;
-  gap: var(--spacing-xs);
-  margin-top: var(--spacing-sm);
-}
-
-.footer-subscribe input {
-  flex: 1;
-  padding: var(--spacing-sm);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--white);
-}
-
-.footer-subscribe button {
-  padding: var(--spacing-sm) var(--spacing-md);
-  background: var(--accent);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  transition: all var(--transition-fast);
-}
-
-.footer-subscribe button:hover {
-  background: var(--accent-dark);
-  transform: translateY(-2px);
 }
 
 /* Responsive Fixes */
