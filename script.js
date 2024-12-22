@@ -118,7 +118,7 @@ window.addEventListener('scroll', () => {
 
 // Countdown Timer
 function updateCountdown() {
-  const eventDate = new Date('2025-01-01T14:00:00').getTime();
+  const eventDate = new Date('2025-01-01T00:00:00').getTime();
   const now = new Date().getTime();
   const distance = eventDate - now;
 
@@ -242,35 +242,71 @@ contactForm.addEventListener('submit', (e) => {
 });
 
 function validateForm() {
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const phone = document.getElementById('phone').value;
-  const message = document.getElementById('message').value;
+    // Get form elements with error handling
+    const name = document.getElementById('name')?.value.trim() ?? '';
+    const email = document.getElementById('email')?.value.trim() ?? '';
+    const phone = document.getElementById('phone')?.value.trim() ?? '';
+    const message = document.getElementById('message')?.value.trim() ?? '';
 
-  // Basic validation
-  if (!name || !email || !phone || !message) {
-      alert('Please fill in all fields');
-      return false;
-  }
+    // Required fields validation
+    if (!name || !email || !phone || !message) {
+        showError('Please fill in all fields');
+        return false;
+    }
 
-  // Email validation
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailPattern.test(email)) {
-      alert('Please enter a valid email address');
-      return false;
-  }
+    // Email validation with comprehensive regex
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        showError('Please enter a valid email address');
+        return false;
+    }
 
-  // Phone validation
-  const phonePattern = /^\d{10}$/;
-  if (!phonePattern.test(phone.replace(/\D/g, ''))) {
-      alert('Please enter a valid 10-digit phone number');
-      return false;
-  }
+    // Phone validation (allows common formats)
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length !== 10) {
+        showError('Please enter a valid 10-digit phone number');
+        return false;
+    }
 
-  // If validation passes, you can submit the form
-  alert('Thank you for your message! We will get back to you soon.');
-  contactForm.reset();
-  return true;
+    // Sanitize inputs
+    const sanitizedData = {
+        name: sanitizeInput(name),
+        email: sanitizeInput(email),
+        phone: sanitizeInput(phone),
+        message: sanitizeInput(message)
+    };
+
+    // Compose email body
+    const emailBody = `Name: ${sanitizedData.name}%0D%0A`
+        + `Email: ${sanitizedData.email}%0D%0A`
+        + `Phone: ${sanitizedData.phone}%0D%0A`
+        + `Message: ${sanitizedData.message}`;
+
+    // Submit form
+    try {
+        window.location.href = `mailto:himanshu.kumar5403@gmail.com?subject=Contact Form Submission&body=${emailBody}`;
+        document.getElementById('contactForm')?.reset();
+        alert('Thank you for your message! We will get back to you soon.');
+        return true;
+    } catch (error) {
+        showError('An error occurred. Please try again.');
+        return false;
+    }
+}
+
+// Helper function for sanitizing input
+function sanitizeInput(input) {
+    return input
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;')
+        .replace(/\\/g, '&#092;');
+}
+
+// Helper function for showing errors
+function showError(message) {
+    alert(message);
 }
 
 // Smooth Scrolling
