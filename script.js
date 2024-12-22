@@ -46,41 +46,64 @@ const events = [
 
 // Timeline Data
 const timelineEvents = [
-  {
-      title: 'Opening Ceremony',
-      time: '2:00 PM',
-      description: 'Inauguration of TechFest Buxar 2025'
-  },
-  {
-      title: 'Hackathon Kickoff',
-      time: '2:30 PM',
-      description: 'Begin your 24-hour coding journey'
-  },
-  {
-      title: 'Robotics Workshop',
-      time: '3:30 PM',
-      description: 'Hands-on session with robotics'
-  },
-  {
-      title: 'AI Workshop',
-      time: '4:00 PM',
-      description: 'Exploring AI and ML concepts'
-  },
-  {
-      title: 'Tech Talks',
-      time: '5:00 PM',
-      description: 'Industry expert presentations'
-  },
-  {
-      title: 'Project Exhibition',
-      time: '6:00 PM',
-      description: 'Student innovation showcase'
-  },
-  {
-      title: 'Cultural Night',
-      time: '7:00 PM',
-      description: 'Entertainment and performances'
-  }
+    {
+        title: 'Grand Opening Ceremony',
+        time: '9:00 AM',
+        description: 'Join us for an inspiring inauguration with industry leaders and special guests.',
+        category: 'main',
+        speakers: ['Dr. Sarah Johnson', 'Prof. Michael Chen'],
+        location: 'Main Auditorium'
+    },
+    {
+        title: 'Hackathon Kickoff',
+        time: '10:00 AM',
+        description: '24-hour coding challenge begins! Form your teams and start building innovative solutions.',
+        category: 'technical',
+        prizes: ['₹50,000 First Prize', '₹30,000 Second Prize', '₹20,000 Third Prize'],
+        location: 'Innovation Hub'
+    },
+    {
+        title: 'AI & Machine Learning Workshop',
+        time: '11:30 AM',
+        description: 'Deep dive into neural networks and practical ML applications with industry experts.',
+        category: 'workshop',
+        prerequisites: ['Basic Python knowledge', 'Laptop required'],
+        instructor: 'Dr. Alex Kumar',
+        location: 'Workshop Hall A'
+    },
+    {
+        title: 'Tech Talks: Future of Innovation',
+        time: '2:00 PM',
+        description: 'Leading tech experts share insights on emerging technologies and future trends.',
+        category: 'technical',
+        speakers: ['Rahul Sharma - Google', 'Priya Patel - Microsoft'],
+        location: 'Conference Room'
+    },
+    {
+        title: 'Robotics & IoT Workshop',
+        time: '3:30 PM',
+        description: 'Hands-on session with cutting-edge robotics and IoT devices. Build your own smart device!',
+        category: 'workshop',
+        materials: 'All equipment provided',
+        instructor: 'Prof. David Wong',
+        location: 'Robotics Lab'
+    },
+    {
+        title: 'Project Exhibition',
+        time: '5:00 PM',
+        description: 'Showcase of innovative student projects and startup demonstrations.',
+        category: 'technical',
+        prizes: ['Best Innovation Award', 'People\'s Choice Award'],
+        location: 'Exhibition Hall'
+    },
+    {
+        title: 'Cultural Night & Awards',
+        time: '7:00 PM',
+        description: 'Celebrate with performances, award ceremony, and networking dinner.',
+        category: 'cultural',
+        highlights: ['Award Ceremony', 'Live Performances', 'Networking Dinner'],
+        location: 'Main Auditorium'
+    }
 ];
 
 // Navbar Scroll Effect
@@ -125,7 +148,7 @@ function generateEventCards(filterCategory = 'all') {
           card.className = 'event-card';
           card.innerHTML = `
               <div class="event-image">
-                  <img src="https://picsum.photos/200/300?random=${event.time}" alt="${event.title}">
+                  <img src="${event.image||'https://picsum.photos/200/300'}?random=${event.time}" alt="${event.title}">
               </div>
               <div class="event-content">
                   <h3 class="event-title">${event.title}</h3>
@@ -158,14 +181,57 @@ generateEventCards();
 // Generate Timeline
 const timelineContainer = document.querySelector('.timeline-container');
 timelineEvents.forEach((event, index) => {
-  const timelineItem = document.createElement('div');
-  timelineItem.className = 'timeline-item';
-  timelineItem.innerHTML = `
-      <h3>${event.title}</h3>
-      <p class="time"><i class="far fa-clock"></i> ${event.time}</p>
-      <p>${event.description}</p>
-  `;
-  timelineContainer.appendChild(timelineItem);
+    const timelineItem = document.createElement('div');
+    timelineItem.className = 'timeline-item';
+    timelineItem.setAttribute('data-category', event.category);
+    
+    // Build additional info based on event type
+    let additionalInfo = '';
+    if (event.speakers) {
+        additionalInfo = `<div class="event-speakers">
+            <strong>Speakers:</strong> ${event.speakers.join(', ')}
+        </div>`;
+    }
+    if (event.prizes) {
+        additionalInfo = `<div class="event-prizes">
+            <strong>Prizes:</strong> ${event.prizes.join('<br /> ')}
+        </div>`;
+    }
+    if (event.prerequisites) {
+        additionalInfo = `<div class="event-prerequisites">
+            <strong>Prerequisites:</strong> ${event.prerequisites.join(', ')}
+        </div>`;
+    }
+
+    timelineItem.innerHTML = `
+        <div class="timeline-content">
+            <div class="timeline-time">
+                <i class="far fa-clock"></i>
+                <span>${event.time}</span>
+            </div>
+            <h3 class="timeline-title">${event.title}</h3>
+            <p class="timeline-description">${event.description}</p>
+            ${additionalInfo}
+            <div class="event-location">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>${event.location}</span>
+            </div>
+        </div>
+    `;
+
+    // Add animation delay based on index
+    timelineItem.style.animationDelay = `${index * 0.2}s`;
+    
+    // Add hover effect for extra details
+    timelineItem.addEventListener('mouseenter', () => {
+        timelineItem.classList.add('expanded');
+    });
+
+    timelineItem.addEventListener('mouseleave', () => {
+        timelineItem.classList.remove('expanded');
+    });
+
+    timelineContainer.appendChild(timelineItem);
 });
 
 // Form Handling
